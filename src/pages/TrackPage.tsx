@@ -138,7 +138,8 @@ export default function TrackPage() {
       (result, status) => {
         setPreviewLoading(false);
         if (status !== google.maps.DirectionsStatus.OK || !result) {
-          setPreviewError('Could not find a route for those locations.');
+          console.error('Directions request failed', status, { originText, destinationText, waypoints });
+          setPreviewError(`Could not find a route (${status}). ${directionsStatusHint(status)}`);
           return;
         }
         const legs = result.routes[0]?.legs ?? [];
@@ -463,4 +464,21 @@ function formatDuration(totalSeconds: number): string {
   const m = Math.floor((totalSeconds % 3600) / 60);
   const s = totalSeconds % 60;
   return [h, m, s].map((n) => String(n).padStart(2, '0')).join(':');
+}
+
+function directionsStatusHint(status: google.maps.DirectionsStatus): string {
+  switch (status) {
+    case google.maps.DirectionsStatus.REQUEST_DENIED:
+      return 'Your Google Maps API key is not authorized to use the Directions API.';
+    case google.maps.DirectionsStatus.ZERO_RESULTS:
+      return 'No driving route exists between those two points.';
+    case google.maps.DirectionsStatus.NOT_FOUND:
+      return 'One of the addresses could not be located.';
+    case google.maps.DirectionsStatus.OVER_QUERY_LIMIT:
+      return 'API quota/billing limit reached for this key.';
+    case google.maps.DirectionsStatus.INVALID_REQUEST:
+      return 'The request was malformed.';
+    default:
+      return 'Try a more specific address.';
+  }
 }
