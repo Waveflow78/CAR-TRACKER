@@ -23,6 +23,7 @@ export type Trip = {
   source: TripSource;
   origin_address: string | null;
   destination_address: string | null;
+  stops_addresses: string[];
   created_at: string;
 };
 

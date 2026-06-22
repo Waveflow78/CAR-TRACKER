@@ -50,7 +50,7 @@ export default function HistoryPage() {
           <Link key={trip.id} to={`/trips/${trip.id}`} className="trip-card">
             <div className="trip-date">
               {new Date(trip.started_at).toLocaleString()}
-              {trip.source === 'manual' && <span className="badge">Planned</span>}
+              {trip.origin_address && <span className="badge">Routed</span>}
             </div>
             <div className="trip-row">
               <span>{trip.distance_km?.toFixed(2)} km</span>

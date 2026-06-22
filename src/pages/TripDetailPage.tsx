@@ -42,22 +42,17 @@ export default function TripDetailPage() {
       )}
 
       <div className="detail-stats">
-        {trip.source === 'manual' && (
-          <>
-            <Row label="From" value={trip.origin_address ?? '-'} />
-            <Row label="To" value={trip.destination_address ?? '-'} />
-          </>
-        )}
+        {trip.origin_address && <Row label="From" value={trip.origin_address} />}
+        {trip.stops_addresses?.map((stop, idx) => (
+          <Row key={idx} label={`Stop ${idx + 1}`} value={stop} />
+        ))}
+        {trip.destination_address && <Row label="To" value={trip.destination_address} />}
         <Row label="Started" value={new Date(trip.started_at).toLocaleString()} />
         <Row label="Ended" value={trip.ended_at ? new Date(trip.ended_at).toLocaleString() : '-'} />
         <Row label="Duration" value={formatDuration(trip.duration_seconds ?? 0)} />
         <Row label="Distance" value={`${trip.distance_km?.toFixed(2)} km`} />
-        {trip.source !== 'manual' && (
-          <>
-            <Row label="Avg speed" value={`${trip.avg_speed_kmh?.toFixed(1)} km/h`} />
-            <Row label="Max speed" value={`${trip.max_speed_kmh?.toFixed(1)} km/h`} />
-          </>
-        )}
+        <Row label="Avg speed" value={`${trip.avg_speed_kmh?.toFixed(1)} km/h`} />
+        <Row label="Max speed" value={`${trip.max_speed_kmh?.toFixed(1)} km/h`} />
         <Row label="Fuel average" value={`${trip.fuel_avg_km_per_liter} km/l`} />
         <Row label="Fuel price" value={`KES ${trip.fuel_price_per_liter}/l`} />
         <Row label="Fuel used" value={`${trip.fuel_liters_used?.toFixed(2)} L`} />

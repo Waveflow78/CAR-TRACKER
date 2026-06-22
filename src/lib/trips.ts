@@ -16,6 +16,7 @@ export async function saveTrip(trip: {
   source?: TripSource;
   originAddress?: string;
   destinationAddress?: string;
+  stopsAddresses?: string[];
 }): Promise<Trip> {
   const { data, error } = await supabase
     .from('trips')
@@ -34,6 +35,7 @@ export async function saveTrip(trip: {
       source: trip.source ?? 'gps',
       origin_address: trip.originAddress ?? null,
       destination_address: trip.destinationAddress ?? null,
+      stops_addresses: trip.stopsAddresses ?? [],
     })
     .select()
     .single();
